@@ -22,8 +22,18 @@ export function addUser(req, res, next) {
  * @param {Function} next
  */
 export function login(req, res, next) {
+  console.log('data : ', req.body);
   userService
     .login(req.body)
+    .then((data) => res.json(data))
+    .catch((err) => next(err));
+}
+
+
+export function register(req, res, next) {
+  console.log('data : ', req.body);
+  userService
+    .createUser(req.body)
     .then((data) => res.json(data))
     .catch((err) => next(err));
 }
