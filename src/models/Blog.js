@@ -8,8 +8,8 @@ class Blog extends DBModel {
     super('blogs');
   }
 
-     getAllBlogs() {
-    return  this.query(getAllBlogsQuery);
+  getAllBlogs() {
+    return  this.queryForBlogsWithBlogImage(getAllBlogsQuery);
   }
 
   async getBlogDetails(blogId) {

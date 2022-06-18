@@ -18,6 +18,7 @@ export function validateQueryParams(schema) {
       Joi.assert(req.query, schema);
       next();
     } catch (err) {
+      console.log('validate query params', err)
       next(err);
       // res.status(400).json({
       //   message: 'Query params validation error',

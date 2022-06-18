@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {expressjwt} from 'express-jwt';
 
-import connection from './knexfile.js';
+import db from "../db/db.js";
 import loginSchema from './schemas/login.js';
 import registerSchema from './schemas/register_schema.js';
 
@@ -27,8 +27,8 @@ const router = Router();
 router.get('/', apiController.getAPIDetails);
 
 router.get('/abcd', async (req, res, next) => {
-  console.log(connection);
-  const data = await connection('blogs').select('*');
+  console.log(db);
+  const data = await db('blogs').select('*');
   // console.log(req.baseUrl);
   // res.send('hello this');
   console.log(data);

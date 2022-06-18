@@ -15,25 +15,25 @@ export async function getAllBlogs(query) {
   logger.info('Fetching a list of all blogs');
 
   const blogs = await new Blog().getAllBlogs();
-  const parsedBlogs = blogs.map((blog) => ({
-    ...blog,
-    images: blog.images ? blog.images.split(',') : [],
-  }));
+  // const parsedBlogs = blogs.map((blog) => ({
+  //   ...blog,
+  //   images: blog.images ? blog.images.split(',') : [],
+  // }));
 
-  let filteredBlogs = parsedBlogs;
+  let filteredBlogs = blogs;
   console.log({ filteredBlogs, descriptionFilter, titleFilter });
   if (blogFilter.length) {
-    filteredBlogs = parsedBlogs.filter((blog) => blogFilter.includes(blog.blogId));
+    filteredBlogs = blogs.filter((blog) => blogFilter.includes(blog.blogId));
   }
 
   if (titleFilter.length) {
-    filteredBlogs = parsedBlogs.filter((blog) => titleFilter.includes(blog.titleId));
+    filteredBlogs = blogs.filter((blog) => titleFilter.includes(blog.titleId));
   }
   if (descriptionFilter.length) {
-    filteredBlogs = parsedBlogs.filter((blog) => descriptionFilter.includes(blog.descriptionId));
+    filteredBlogs = blogs.filter((blog) => descriptionFilter.includes(blog.descriptionId));
   }
   if (writerFilter.length) {
-    filteredBlogs = parsedBlogs.filter((blog) => writerFilter.includes(blog.writer));
+    filteredBlogs = blogs.filter((blog) => writerFilter.includes(blog.writer));
   }
   return {
     data: filteredBlogs,
