@@ -10,33 +10,36 @@ import routes from './routes.js';
 import logger from './utils/logger.js';
 import errorHandler from './middlewares/errorHandler.js';
 import db from "../db/db.js";
+import http from 'http';
 
-const server = express();
+const app = express();
 
 dotenv.config();
 
-server.use(cors());
-server.use(serveFavicon('./public/favicon.ico'));
+app.use(cors());
+app.use(serveFavicon('./public/favicon.ico'));
+
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
 // const db = diskDb.connect('./db', ['cars']);
 
-server.use(helmet());
-server.use(morgan('common'));
+app.use(helmet());
+app.use(morgan('common'));
 
 
 
-// server.use(morgan('dev', {stream: logStream}));
-server.use(bodyParser.json());
+// app.use(morgan('dev', {stream: logStream}));
 
-server.use(routes);
-server.use(errorHandler);
+app.use(routes);
+app.use(errorHandler);
 
 
 // console.log({port: process.env.PORT,
 // password: process.env.PASSWORD});
 
 // const PORT = 8000;
-
+const server = http.createServer(app);
 server.listen(process.env.PORT, () => {
   logger.info(`Listening on 127.0.0.1:${process.env.PORT}`);
 });

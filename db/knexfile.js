@@ -11,7 +11,8 @@ export default {
       host: 'localhost',
       port: 5432,
       user: 'postgres' ,
-      password : 'dipak',
+      // password : 'dipak',
+      password : 'postgres',
       database : 'blogs_db',
     },
      pool: {

@@ -86,25 +86,27 @@ export async function addBlog(params) {
   logger.info('Saving the new blog data');
   const blogData = await new Blog().save(blogTableInsertParams);
   console.log('blog : ', blogData);
-  if (params.images.length) {
-    logger.info('Creating insert data for blog_images table');
-    const blogImagesInsertData = params.images.map((url) => ({
-      blogId: blogData.id,
-      imageUrl: url
-    }));
+  const allBlogData = await new Blog().getAllBlogs();
+  console.log('all blogs: ', allBlogData);
+//   if (params.images.length) {
+//     logger.info('Creating insert data for blog_images table');
+//     const blogImagesInsertData = params.images.map((url) => ({
+//       blogId: blogData.id,
+//       imageUrl: url
+//     }));
 
-logger.info(`Inserting ${blogImagesInsertData.length} records into the blog_images table`);
-    blogImagesInsertData.forEach(async (insertData) => {
-      await new BlogImage().save(insertData);
-    });
-  }
-  logger.info('Retreiving the saved blog details');
-  // const data = await new Blog().getAllBlogs();
-  const data = await new Blog().getAllBlogs(blogData.id);
+// logger.info(`Inserting ${blogImagesInsertData.length} records into the blog_images table`);
+//     blogImagesInsertData.forEach(async (insertData) => {
+//       await new BlogImage().save(insertData);
+//     });
+//   }
+//   logger.info('Retreiving the saved blog details');
+//   // const data = await new Blog().getAllBlogs();
+//   const data = await new Blog().getAllBlogs(blogData.id);
 
   
   return {
-    data,
+    allBlogData,
     message: 'Added the record successfully',
   };
 }

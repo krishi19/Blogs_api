@@ -93,7 +93,7 @@ class DBModel{
     // });
     console.log('blogs result : ', newAllBlogs);
     if(newAllBlogs.length > 0){
-      return camelize(allBlogs);
+      return camelize(newAllBlogs);
     }
     
   }
