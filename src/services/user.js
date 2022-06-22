@@ -20,13 +20,16 @@ export async function createUser(params) {
 
     throw new Boom.badRequest('The email address is already taken');
   }
-
+  console.log('data here in create: ', params);
   const hashedPassword = hash(password);
-
-  const [insertedData] = await new User().save({ name, email, password: hashedPassword });
-
+  console.log('hash pass: ', hashedPassword);
+  const insertedData = await new User().save({ name, email, password: hashedPassword });
+  console.log('insereted data: ', insertedData)
   return {
-    data: insertedData,
+    data: {
+      "email": insertedData.email,
+      "name": insertedData.name,
+    },
     message: 'Added user successfully'
   };
 }
@@ -45,7 +48,7 @@ export async function login(params) {
   if (!existingUser) {
     logger.error('Invalid credentials: Could not find the associated email');
 
-    throw new Boom.badRequest('Invalid credentials');
+    throw new Boom.notFound('Invalid credentials');
   }
 
   const doesPasswordMatch = compare(password, existingUser.password);
@@ -53,13 +56,13 @@ export async function login(params) {
   if (!doesPasswordMatch) {
     logger.error('Invalid credentials: Password does not match');
 
-    throw new Boom.badRequest('Invalid credentials');
+    throw new Boom.notFound('Invalid credentials');
   }
 
   const user = {
     id: existingUser.id,
     name: existingUser.name,
-    email: existingUser.email
+    email: existingUser.email,
   };
 
   const token = createToken(user);

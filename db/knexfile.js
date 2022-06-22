@@ -7,12 +7,13 @@ export default {
 
   development: {
     client: 'pg',
+    version:'1.1',
     connection: {
       host: 'localhost',
       port: 5432,
       user: 'postgres' ,
       // password : 'dipak',
-      password : 'postgres',
+      password : 'dipak',
       database : 'blogs_db',
     },
      pool: {
@@ -21,6 +22,7 @@ export default {
     },
     migrations: {
       directory:'./migrations',
+    
     }
   },
 

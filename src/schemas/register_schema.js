@@ -1,8 +1,9 @@
 import Joi from 'joi';
 
 const schema = Joi.object({
-  email: Joi.string().email().max(50).required(),
-  password: Joi.string().min(8).max(20).required()
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).max(100).required(),
+  name: Joi.string().required(),
 });
 
 export default schema;

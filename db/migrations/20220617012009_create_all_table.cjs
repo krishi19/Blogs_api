@@ -8,6 +8,7 @@ exports.up = function(knex) {
             table.increments();
             table.string('title').notNullable().unique();
             table.string('description').nullable();
+            table.string('writer').notNullable();
             table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());      
             table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
         })
@@ -22,6 +23,7 @@ exports.up = function(knex) {
             table.increments();
             table.string('email').notNullable().unique();
             table.string('name').nullable();
+            table.string('password').notNullable().unique();
             table.boolean('is_active').defaultTo(true);
             table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());      
             table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now()); 

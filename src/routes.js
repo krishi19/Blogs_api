@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {expressjwt} from 'express-jwt';
+import tokenMiddleware from './middlewares/token_middleware.js';
 
 import db from "../db/db.js";
 import loginSchema from './schemas/login.js';
@@ -17,6 +18,7 @@ import addBlogSchema from './schemas/addBlog.js';
 import getBlogsQuerySchema from './schemas/getBlogsQuery.js';
 
 import { validateBody, validateQueryParams } from './middlewares/validation.js';
+import uploadFile from './fileUpload/file_upload.js';
 
 const router = Router();
 
@@ -35,19 +37,19 @@ router.get('/abcd', async (req, res, next) => {
   res.json(data);
 });
 
-router.get('/blogs', validateQueryParams(getBlogsQuerySchema), blogController.getBlogs);
+router.get('/blogs',tokenMiddleware, blogController.getBlogs);
 
-router.get('/blogs/:blogIdentifier', blogController.getBlog);
+router.get('/blogs/:blogIdentifier',tokenMiddleware, blogController.getBlog);
 
 // router.get('/blogs/:blogIdentifier', blogController.getBlog);
+// validateBody(addBlogSchema)
+router.post('/blogs', uploadFile.single('recfile'), tokenMiddleware ,validateBody(addBlogSchema), blogController.saveBlog);
 
-router.post('/blogs', validateBody(addBlogSchema), blogController.saveBlog);
+router.put('/blogs/:blogIdentifier',tokenMiddleware, validateBody(updateBlogSchema), blogController.updateBlog);
 
-router.put('/blogs/:blogIdentifier', validateBody(updateBlogSchema), blogController.updateBlog);
+router.delete('/blogs/:blogIdentifier',tokenMiddleware, blogController.removeBlog);
 
-router.delete('/blogs/:blogIdentifier', blogController.removeBlog);
-
-router.post('/users', validateBody(addUserSchema), userController.addUser);
+// router.post('/users',tokenMiddleware, validateBody(addUserSchema), userController.addUser);
 
 router.post('/login', validateBody(loginSchema), userController.login);
 

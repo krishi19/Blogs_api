@@ -35,9 +35,17 @@ export async function getAllBlogs(query) {
   if (writerFilter.length) {
     filteredBlogs = blogs.filter((blog) => writerFilter.includes(blog.writer));
   }
+  console.log('filter blogs: ', filteredBlogs)
+  if(!filteredBlogs){
+    console.log('filter blogs not find');
+    return {
+      data: [],
+      message: 'Successfully fetched all blogs.',
+    };
+  }
   return {
     data: filteredBlogs,
-    message: 'List of blogs',
+    message: 'Successfully fetched all blogs.',
   };
 }
 
@@ -106,7 +114,7 @@ export async function addBlog(params) {
 
   
   return {
-    allBlogData,
+    data : allBlogData,
     message: 'Added the record successfully',
   };
 }

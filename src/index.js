@@ -11,16 +11,18 @@ import logger from './utils/logger.js';
 import errorHandler from './middlewares/errorHandler.js';
 import db from "../db/db.js";
 import http from 'http';
+import multer from 'multer';
 
 const app = express();
-
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
 dotenv.config();
 
 app.use(cors());
 app.use(serveFavicon('./public/favicon.ico'));
 
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+// app.use(express.json());
+// app.use(express.urlencoded({extended: false}));
 
 // const db = diskDb.connect('./db', ['cars']);
 

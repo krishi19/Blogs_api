@@ -1,8 +1,8 @@
 import Joi from 'joi';
 export function validateBody(schema) {
   return function (req, res, next) {
-    console.log('req data: ', req.query);
-    console.log('req data: ', req.body);
+    console.log('req data query: ', req.query);
+    console.log('req data body: ', req.body);
     console.log('req file : ', req.file);
     try {
       
