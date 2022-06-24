@@ -77,10 +77,9 @@ export async function addBlog(params) {
   logger.debug('Payload received', params);
 
   const blogTableInsertParams = {
-    title:params.title,
+    title: params.title,
     description: params.description,
-    // writer : params.writer,
-    // horserpower : params.horserpower
+    writer : params.writer,
   };
   logger.info('Checking if similar record already exists');
 
@@ -94,30 +93,31 @@ export async function addBlog(params) {
   logger.info('Saving the new blog data');
   const blogData = await new Blog().save(blogTableInsertParams);
   console.log('blog : ', blogData);
+  if(blogData){
+    const blogImages = params.images;
+    console.log('blog images inside controller: ', blogImages, blogData[0].id);
+    if(blogImages){
+      for(let i = 0; i<blogImages.length; i++){
+        const bi = blogImages[i];
+        console.log('blog image on loop: ',bi);
+        const blogImagesMap = {
+          blog_id: blogData[0].id,
+          image_url: bi,
+        };
+        const blogImagesData = await new BlogImage().save(blogImagesMap);
+        console.log('saved image: ',blogImagesData);
+      }
+    }
+  }
   const allBlogData = await new Blog().getAllBlogs();
   console.log('all blogs: ', allBlogData);
-//   if (params.images.length) {
-//     logger.info('Creating insert data for blog_images table');
-//     const blogImagesInsertData = params.images.map((url) => ({
-//       blogId: blogData.id,
-//       imageUrl: url
-//     }));
-
-// logger.info(`Inserting ${blogImagesInsertData.length} records into the blog_images table`);
-//     blogImagesInsertData.forEach(async (insertData) => {
-//       await new BlogImage().save(insertData);
-//     });
-//   }
-//   logger.info('Retreiving the saved blog details');
-//   // const data = await new Blog().getAllBlogs();
-//   const data = await new Blog().getAllBlogs(blogData.id);
-
   
   return {
     data : allBlogData,
-    message: 'Added the record successfully',
+    message: 'Added record successfully',
   };
 }
+
 export async function updateBlog(id, params) {
   logger.info(`Checking the existence of blog with id ${id}`);
 
@@ -126,37 +126,41 @@ export async function updateBlog(id, params) {
   if (!blog) {
     logger.error(`Cannot find blog with id ${id}`);
 
-    throw new Boom.notFound(`Cannot find blog with id ${id}`);
+    throw Boom.notFound(`Cannot find blog with id ${id}`);
   }
   logger.info(`Updating the data for blog id ${id}`);
 
-  await new Blog().updateById(id, {
-    title: params.titleId,
-    description : params.description
+  const blogUpdatedData = await new Blog().updateById(id, {
+    title: params.title,
+    description : params.description,
+    writer: params.writer
   });
 
+  console.log('updated blog data: ', blogUpdatedData);
 
-  if (params.images?.added?.length) {
-    params.images.added.forEach(async (url) => {
-      await new BlogImage().save({ id, imageUrl: url });
-    });
-  }
 
-  if (params.images?.removed?.length) {
-    params.images.removed.forEach(async (url) => {
-      await new BlogImage().removeByParams({ id, imageUrl: url });
-    });
-  }
+  // if (params.images?.added?.length) {
+  //   params.images.added.forEach(async (url) => {
+  //     await new BlogImage().save({ id, imageUrl: url });
+  //   });
+  // }
+
+  // if (params.images?.removed?.length) {
+  //   params.images.removed.forEach(async (url) => {
+  //     await new BlogImage().removeByParams({ id, imageUrl: url });
+  //   });
+  // }
 
   logger.info(`Fetching  the updated  data for blog id ${id}`);
 
-  const updatedData = await new Blog().getBlogDetails(id);
+  const updatedData = await new Blog().getAllBlogs();
 
   return {
     data: updatedData,
     message: 'Record updated successfully',
   };
 }
+
 export async function removeBlog(id) {
   logger.info(`Checking if blog with id ${id} exists`);
 
@@ -168,10 +172,13 @@ export async function removeBlog(id) {
     throw new Boom.notFound(`Cannot delete blog with id ${id} because it doesnt exist`);
   }
  
- await new BlogImage().removeByParams({blogId: id});
-  await new Blog().removeById(id);
-
+  const blogImageDeleteRes = await new BlogImage().removeByParams({blog_id: id});
+  console.log('delted image : ', blogImageDeleteRes);
+  const blogDelRes = await new Blog().removeById(id);
+  console.log('deleted blog: ', blogDelRes);
+  const updatedData = await new Blog().getAllBlogs();
   return {
+    data: updatedData,
     message: 'Record removed successfully.',
   };
 }

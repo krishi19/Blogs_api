@@ -6,6 +6,7 @@ const schema = Joi.object({
   title: Joi.string().max(200).required(),
   description: Joi.string().max(1500).required(),
   writer: Joi.string().required(),
+  images: Joi.array(),
   // file: Joi.array().items(Joi.string())
 });
 

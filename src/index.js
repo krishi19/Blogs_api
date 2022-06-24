@@ -11,11 +11,18 @@ import logger from './utils/logger.js';
 import errorHandler from './middlewares/errorHandler.js';
 import db from "../db/db.js";
 import http from 'http';
-import multer from 'multer';
+import multer  from 'multer';
+import fs from 'fs';
 
 const app = express();
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(bodyParser.json())
+
+// app.use(multer.array());
+app.use(express.json())
+app.use(express.urlencoded({extended: false}))
+
+app.use(express.static('public'));
+
+
 dotenv.config();
 
 app.use(cors());
@@ -39,9 +46,10 @@ app.use(errorHandler);
 
 // console.log({port: process.env.PORT,
 // password: process.env.PASSWORD});
-
 // const PORT = 8000;
 const server = http.createServer(app);
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT,'0.0.0.0', () => {
   logger.info(`Listening on 127.0.0.1:${process.env.PORT}`);
 });
+
+export default server;

@@ -28,10 +28,11 @@ class DBModel{
   async save(data) {
     const result = await database(this.table).insert(snakeize(data)).returning('*');
 
-    return camelize(data);  
+    return camelize(result);  
   }
 
   async updateById(id, data) {
+    // .returning('*')
     const result= await database(this.table).update(snakeize( data)).where({id}).returning('*');
 
     return camelize(result);

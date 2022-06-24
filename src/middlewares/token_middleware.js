@@ -4,6 +4,7 @@ const secretKey = process.env.TOKEN_SECRET;
 
 const  tokenMiddleware =  async(req,res,next)=>{
     console.log('req body token val :',req.body);
+    // console.log('req file token val :',req.file);
     const authHeader = req.headers.authorization;
     console.log('auth headere', authHeader);
     try{
@@ -29,10 +30,11 @@ const  tokenMiddleware =  async(req,res,next)=>{
                     throw Boom.unauthorized('Token invalid !');
                 }
             }catch(e){
-                // return res.status(500).json({
-                //     message:'Something went wrong !'
-                // });
-                throw Boom.badData('Something went wrong !');
+                console.log('token val: ', e.output);
+                return res.status(e.output.statusCode).json({
+                    message:e.message,
+                });
+                // throw Boom.badData('e.message!');
             }
         }else{
             // return res.status(401).json({
