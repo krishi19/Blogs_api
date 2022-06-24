@@ -42,13 +42,13 @@ router.get('/abcd', async (req, res, next) => {
   res.json(data);
 });
 
-router.get('/blogs',tokenMiddleware, blogController.getBlogs);
+router.get('/blogs', blogController.getBlogs);
 
-router.get('/blogs/:blogIdentifier',tokenMiddleware, blogController.getBlog);
+router.get('/blogs/:blogIdentifier', blogController.getBlog);
 
 // router.get('/blogs/:blogIdentifier', blogController.getBlog);
 // validateBody(addBlogSchema)
-router.post('/blogs', tokenMiddleware ,validateBody(addBlogSchema), blogController.saveBlog);
+router.post('/blogs' ,validateBody(addBlogSchema), blogController.saveBlog);
 
 router.put('/blogs/:blogIdentifier',tokenMiddleware, validateBody(updateBlogSchema), blogController.updateBlog);
 
@@ -68,8 +68,8 @@ router.post('/register', validateBody(registerSchema), userController.register);
 
 router.post("/upload-image", (req, res) => {
   let serverAddress = server.address();
-  console.log('server : ', req.secure);
-  let serverAddressWithPort = req.secure ? 'https://' : 'http://'+serverAddress.address+':' +serverAddress.port;
+  console.log('server : ', req.secure, serverAddress.address.toString() == '0.0.0.0');
+  let serverAddressWithPort = req.secure ? 'https://' : 'http://'+(serverAddress.address.toString() == '0.0.0.0' ? 'localhost' : serverAddress.address)+':' +serverAddress.port;
   console.log('ser ver add: ', serverAddressWithPort);
   upload(req, res, (err) => {
     if(err) {
@@ -78,6 +78,7 @@ router.post("/upload-image", (req, res) => {
       return Boom.badRequest('Something went wrong!');
     }
     let fileDetails = req.file;
+    console.log('req file details: ', fileDetails);
     fileDetails.fullPath = serverAddressWithPort+'/media/'+fileDetails.filename;
     res.json(
       {

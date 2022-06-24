@@ -33,7 +33,10 @@ app.use(serveFavicon('./public/favicon.ico'));
 
 // const db = diskDb.connect('./db', ['cars']);
 
-app.use(helmet());
+app.use(helmet(
+  {crossOriginEmbedderPolicy: false,}
+));
+app.use('/media', express.static('media'));
 app.use(morgan('common'));
 
 
